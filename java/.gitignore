@@ -1,0 +1,35 @@
+.idea/*
+.git/
+classes/*
+target/*
+out/*
+!.mvn/wrapper/maven-wrapper.jar
+reference/*
+history/*
+hist_arch/*
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*.log
+*.rar
+
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+

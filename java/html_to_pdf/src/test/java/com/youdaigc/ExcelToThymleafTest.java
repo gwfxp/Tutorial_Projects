@@ -46,7 +46,7 @@ public class ExcelToThymleafTest{
     public void convertExcelToHtml() throws ParserConfigurationException, TransformerException, IOException {
         StringBuilder builder = ExcelToHtmlTemplateConvertor.convertExcelToHTML(
                 loadFile(Excel_Sample_File),
-                Arrays.asList("Sheet2"),
+                null, //Arrays.asList("Sheet2"),
                 PageSize.A4, 36, 36);
 
         FileUtils.write(Paths.get(Output_File_Path, Excel_Sample_File + ".html").toFile(),

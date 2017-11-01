@@ -690,7 +690,11 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
                 StringBuilder buf = new StringBuilder();
                 for(CellVarFuncInfo cellVarFuncInfo : cellVarFuncInfos){
                     if(cellVarFuncInfo.getValues() != null) {
-                        buf.append(cellVarFuncInfo.getAttribute()[1]);
+                        if(cellVarFuncInfo.getCellType() == CellVarFuncInfo.VarFunctionType.PLAIN_TEXT){
+                            buf.append(cellVarFuncInfo.getValues());
+                        }else{
+                            buf.append(cellVarFuncInfo.getAttribute()[1]);
+                        }
                     }
                 }
                 value= buf.toString();
@@ -813,8 +817,8 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         // String str = "&{var=123}%{f=dt}&{cat=---}#{c=test}&{var=456}%{f=decode,BrCT}";
         String str = "#{c=还款次数}&&{each=\"prod : ${prods}\"}Test&{var=SZp17i2.ors.RpCnt}%{f=decode,BrCT}-Gao-&&{class=\"${iterStat.odd}? 'odd'\"}";
         CellVarFuncInfoGroup group = new CellVarFuncInfoGroup();
-        group.parseVarFuncInfo(str);
-
+        group.parseString(str);
+        group.filterCellInfo(CellVarFuncInfo.VarFunctionType.PLAIN_TEXT, CellVarFuncInfo.VarFunctionType.COMMENT);
 //        List<String> list = ExcelToHtmlTemplateConvertor.parserVariable(str);
         System.out.println(group);
 

@@ -178,11 +178,11 @@ public class CellVarFuncInfoGroup implements Serializable {
                         new CellVarFuncInfo(cellType, startPos, endPos, stackBuf)
                 );
 
-                pos += stackBuf.length() + 2;   // 设置新的起始位置为: pos + 截取的字符长度 + 1 ("}")
+                pos += stackBuf.length() + 1;   // 设置新的起始位置为: pos + 截取的字符长度 + 1 ("}")
             } else {
-                if (normalTextBuf == null)
+                if (normalTextBuf == null) {
                     normalTextBuf = new CellVarFuncInfo(CellVarFuncInfo.VarFunctionType.PLAIN_TEXT, pos, pos, String.valueOf(currentChar));
-                else {
+                }else {
                     normalTextBuf.addCharValue(currentChar);
                     normalTextBuf.setEndPosistion(pos); // 更新结束位置为当前位置
                 }
@@ -190,12 +190,17 @@ public class CellVarFuncInfoGroup implements Serializable {
                 pos++;
             }
         }
+
+        if (normalTextBuf != null && normalTextBuf.getCellType() == CellVarFuncInfo.VarFunctionType.PLAIN_TEXT) {
+            addCellVarFuncInfo(normalTextBuf);
+        }
     }
 
     public static void main(String[] args){
         //String str = "#{c=还款次数}&&{each=\"prod : ${prods\\}\"}Test&{var=SZp17i2.ors.RpCnt}%{f=decode,BrCT}-Gao-&&{class=\"${iterStat.odd\\}? 'odd'\"}";
-//        String str = "#{c=商品Code}&{text=SZp17i2.iproCd}%{f=decode,ProCT}&{text=\"${prod.inStock}? #{true} : #{false}\"}&{if=${user.isAdmin()} == false}";
-        String str = "#{c=返済日}&{text=${#dates.format(prod.rpstnDt, 'yyyy-MM-dd')}}";
+        String str = "#{c=商品Code}&{text=SZp17i2.iproCd}%{f=decode,ProCT}&{text=\"${prod.inStock}? #{true} : #{false}\"}&{if=${user.isAdmin()} == false}-EndText";
+//        String str = "#{c=还款日}&{text=${#dates.format(prod.rpstnDt, 'yyyy-MM-dd')}}";
+//        String str = "Test Plain String";
         CellVarFuncInfoGroup group = new CellVarFuncInfoGroup();
         group.parseString(str);
 

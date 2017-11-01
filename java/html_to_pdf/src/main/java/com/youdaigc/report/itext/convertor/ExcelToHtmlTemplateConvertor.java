@@ -41,7 +41,7 @@ import java.util.*;
 
 /**
  * Reference From "ExcelToHtmlConverter"
- * Created by A0003 on 2017-08-28.
+ * @author: Created by A0003 on 2017-08-28.
  */
 public class ExcelToHtmlTemplateConvertor implements Serializable {
     private static final long serialVersionUID = 8058839297125420963L;
@@ -49,7 +49,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
 
     protected static final String EMPTY = "";
 
-    protected final HSSFDataFormatter _formatter = new HSSFDataFormatter();
+    protected final HSSFDataFormatter formatter = new HSSFDataFormatter();
 
     protected FontReplacer fontReplacer = new DefaultFontReplacer();
 
@@ -96,13 +96,13 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
     final static public String COMMENTS_FLAG = "#{";
     final static public String FUNCTIONS_FLAG = "%{";
 
-    final static public String Thymeleaf_PREFIX = "th:";
+    final static public String THYMELEAF_PREFIX = "th:";
 
-    final static public Set<String> Thymeleaf_VARIABLE_LABLES = new HashSet<>(Arrays.asList(
+    final static public Set<String> THYMELEAF_VARIABLE_LABLES = new HashSet<>(Arrays.asList(
        "text"
     ));
 
-    final static public Set<String> Thymeleaf_VARIABLE_PREFIX = new HashSet<>(Arrays.asList(
+    final static public Set<String> THYMELEAF_VARIABLE_PREFIX = new HashSet<>(Arrays.asList(
             "${", "@{", "#{", "*{"
     ));
 
@@ -130,7 +130,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
                 break;
             case SOLID_FOREGROUND:
                 final Color foregroundColor = cellStyle.getFillForegroundColorColor();
-                if (foregroundColor == null) break;
+                if (foregroundColor == null) {
+                    break;
+                }
                 style.append("background-color:" + convertCellColorToRGB(foregroundColor) + ";");
                 break;
             case FINE_DOTS:
@@ -152,19 +154,21 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
             case LEAST_DOTS:
             default:
                 final Color backgroundColor = cellStyle.getFillBackgroundColorColor();
-                if (backgroundColor == null) break;
+                if (backgroundColor == null) {
+                    break;
+                }
                 style.append("background-color:" + convertCellColorToRGB(backgroundColor) + ";");
                 break;
         }
 
-        buildStyle_border(workbook, style, "top",    cellStyle.getBorderTopEnum(),    cellStyle.getTopBorderColor());
-        buildStyle_border(workbook, style, "right",  cellStyle.getBorderRightEnum(),  cellStyle.getRightBorderColor());
-        buildStyle_border(workbook, style, "bottom", cellStyle.getBorderBottomEnum(), cellStyle.getBottomBorderColor());
-        buildStyle_border(workbook, style, "left",   cellStyle.getBorderLeftEnum(),   cellStyle.getLeftBorderColor());
+        buildStyleBorder(workbook, style, "top",    cellStyle.getBorderTopEnum(),    cellStyle.getTopBorderColor());
+        buildStyleBorder(workbook, style, "right",  cellStyle.getBorderRightEnum(),  cellStyle.getRightBorderColor());
+        buildStyleBorder(workbook, style, "bottom", cellStyle.getBorderBottomEnum(), cellStyle.getBottomBorderColor());
+        buildStyleBorder(workbook, style, "left",   cellStyle.getBorderLeftEnum(),   cellStyle.getLeftBorderColor());
 //
         Font font = workbook.getFontAt(cellStyle.getFontIndex());
 
-        buildStyle_font(workbook, style, font);
+        buildStyleFont(workbook, style, font);
 
         return style.toString();
     }
@@ -179,19 +183,14 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         String result = null;
         if(cellColor instanceof HSSFColor){
             // XLS Format Excel File (97-2007)
-//            HSSFPalette colors = ((HSSFWorkbook)wb).getCustomPalette();
-//            HSSFColor color = colors.getColor(colorIndex);
             HSSFColor color = (HSSFColor)cellColor;
             if (color.getIndex() == HSSFColor.HSSFColorPredefined.AUTOMATIC.getColor().getIndex() || color == null) {
-//                result = ""+color.getIndex();
             } else {
                 short[] rgb = color.getTriplet();
-//                result = String.format("#%02x%02x%02x; /* index = %d */", rgb[0], rgb[1], rgb[2], color.getIndex());
                 result = String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2], color.getIndex());
-//                result = String.format("rgba(255, %d, %d, %d);", rgb[0], rgb[1], rgb[2]);
             }
         }else if(cellColor instanceof XSSFColor){
-            // New XLSX Format Excel File (2010 +)
+            // Comment: New XLSX Format Excel File (2010 +)
             XSSFColor color = (XSSFColor)cellColor;
             if (color == null || color.isAuto()) {
                 result = null;
@@ -206,8 +205,11 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
             }
         }
 
-        if(withEnding) return result + ";";
-        else return result;
+        if(withEnding) {
+            return result + ";";
+        } else {
+            return result;
+        }
     }
 
     public String convertCellColorToRGB(Color cellColor){
@@ -223,8 +225,8 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
      * @param xlsBorder
      * @param borderColor
      */
-    protected void buildStyle_border(Workbook workbook, StringBuilder style,
-                                   String type, BorderStyle xlsBorder, short borderColor) {
+    protected void buildStyleBorder(Workbook workbook, StringBuilder style,
+                                    String type, BorderStyle xlsBorder, short borderColor) {
         if (xlsBorder == BorderStyle.NONE) {
             return;
         }
@@ -275,16 +277,26 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
      * @param style
      * @param font
      */
-    protected void buildStyle_font(Workbook workbook, StringBuilder style, Font font) {
+    protected void buildStyleFont(Workbook workbook, StringBuilder style, Font font) {
         StringBuilder fontStyle = new StringBuilder();
-        if(font.getBold()) style.append("font-weight: bold; ");
-        if(font.getItalic()) fontStyle.append("font-style:italic; ");
-        if(font.getStrikeout()) fontStyle.append("text-decoration:line-through; ");
+        if(font.getBold()) {
+            style.append("font-weight: bold; ");
+        }
+        if(font.getItalic()) {
+            fontStyle.append("font-style:italic; ");
+        }
+        if(font.getStrikeout()) {
+            fontStyle.append("text-decoration:line-through; ");
+        }
 
         final Color fontColor = getPaletteColor(workbook, font.getColor());
-        if (fontColor != null) style.append("color: " + convertCellColorToRGB(fontColor)+ "; ");
+        if (fontColor != null) {
+            style.append("color: " + convertCellColorToRGB(fontColor) + "; ");
+        }
 
-        if (font.getFontHeightInPoints() != 0) style.append("font-size:" + font.getFontHeightInPoints() + "pt;");
+        if (font.getFontHeightInPoints() != 0) {
+            style.append("font-size:" + font.getFontHeightInPoints() + "pt;");
+        }
     }
 
 
@@ -302,8 +314,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         }
 
         for (int c = 0; c < maxSheetColumns; c++) {
-            if (!isOutputHiddenColumns() && sheet.isColumnHidden(c))
+            if (!isOutputHiddenColumns() && sheet.isColumnHidden(c)) {
                 continue;
+            }
 
             Element th = htmlDocumentFacade.createTableHeaderCell();
             String text = getColumnName(c);
@@ -328,8 +341,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         List<Integer> colWidthList = new ArrayList<>(maxSheetColumns);
         int totalColumnWidth = 0, colWidth;
         for (int c = 0; c < maxSheetColumns; c++) {
-            if (!isOutputHiddenColumns() && sheet.isColumnHidden(c))
+            if (!isOutputHiddenColumns() && sheet.isColumnHidden(c)) {
                 continue;
+            }
 
             Element col = htmlDocumentFacade.createTableColumn();
             colWidth = getColumnWidth(sheet, c);
@@ -347,7 +361,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
 //        if(hasMaxPageSize){
         int i=0;
         for(Element col : colList){
-            if(col == null) continue;
+            if(col == null) {
+                continue;
+            }
 
             col.setAttribute("width", String.valueOf(Math.round(colWidthList.get(i)*100 /totalColumnWidth)) + "%");
             i++;
@@ -364,10 +380,18 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
      * @param summaryInformation
      */
     protected void processDocumentInformation(SummaryInformation summaryInformation) {
-        if (StringUtils.isNoneBlank(summaryInformation.getTitle())) htmlDocumentFacade.setTitle(summaryInformation.getTitle());
-        if (StringUtils.isNoneBlank(summaryInformation.getAuthor())) htmlDocumentFacade.addAuthor(summaryInformation.getAuthor());
-        if (StringUtils.isNoneBlank(summaryInformation.getKeywords())) htmlDocumentFacade.addKeywords(summaryInformation.getKeywords());
-        if (StringUtils.isNoneBlank(summaryInformation.getComments())) htmlDocumentFacade.addDescription(summaryInformation.getComments());
+        if (StringUtils.isNoneBlank(summaryInformation.getTitle())) {
+            htmlDocumentFacade.setTitle(summaryInformation.getTitle());
+        }
+        if (StringUtils.isNoneBlank(summaryInformation.getAuthor())) {
+            htmlDocumentFacade.addAuthor(summaryInformation.getAuthor());
+        }
+        if (StringUtils.isNoneBlank(summaryInformation.getKeywords())) {
+            htmlDocumentFacade.addKeywords(summaryInformation.getKeywords());
+        }
+        if (StringUtils.isNoneBlank(summaryInformation.getComments())) {
+            htmlDocumentFacade.addDescription(summaryInformation.getComments());
+        }
     }
 
 
@@ -390,7 +414,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         StringBuilderWriter writer = new StringBuilderWriter();
         StreamResult streamResult = new StreamResult(writer);
         TransformerFactory tf = TransformerFactory.newInstance();
-        tf.setAttribute("indent-number", new Integer(2));
+        tf.setAttribute("indent-number", Integer.valueOf(2));
 
         Transformer serializer = tf.newTransformer();
 
@@ -454,7 +478,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         processSheetHeader(htmlDocumentFacade.getBody(), sheet);
 
         final int physicalNumberOfRows = sheet.getPhysicalNumberOfRows();
-        if (physicalNumberOfRows <= 0) return;
+        if (physicalNumberOfRows <= 0) {
+            return;
+        }
 
         Element table = htmlDocumentFacade.createTable();
 //        table.setAttribute("width", "100%");
@@ -471,11 +497,13 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         for (int r = sheet.getFirstRowNum(); r <= sheet.getLastRowNum(); r++) {
             Row row = sheet.getRow(r);
 
-            if (row == null)
+            if (row == null) {
                 continue;
+            }
 
-            if (!isOutputHiddenRows() && row.getZeroHeight())
+            if (!isOutputHiddenRows() && row.getZeroHeight()) {
                 continue;
+            }
 
             Element tableRowElement = htmlDocumentFacade.createTableRow();
             htmlDocumentFacade.addStyleClass(tableRowElement,
@@ -515,7 +543,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
     protected void processSheetHeader(Element htmlBody, Sheet sheet) {
         if(outputSheetPageHeader) {
             Element h2 = htmlDocumentFacade.createHeader2();
-            if(sheetPageHeader == null) sheetPageHeader = sheet.getSheetName();
+            if(sheetPageHeader == null) {
+                sheetPageHeader = sheet.getSheetName();
+            }
             h2.appendChild(htmlDocumentFacade.createText(sheetPageHeader));
             htmlBody.appendChild(h2);
         }
@@ -540,7 +570,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
     protected int processRow(CellRangeAddress[][] mergedRanges, Row row, Element tableRowElement) {
         final Sheet sheet = row.getSheet();
         final short maxColIx = row.getLastCellNum();
-        if (maxColIx <= 0) return 0;
+        if (maxColIx <= 0) {
+            return 0;
+        }
 
         List<CellVarFuncInfo> attributeList;
         CellVarFuncInfoGroup cellVarFuncInfoGroup;
@@ -556,11 +588,15 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         int maxRenderedColumn = 0;
         for (int colIx = 0; colIx < maxColIx; colIx++) {
             // 如果不输出隐藏列, 则跳过
-            if (!isOutputHiddenColumns() && sheet.isColumnHidden(colIx)) continue;
+            if (!isOutputHiddenColumns() && sheet.isColumnHidden(colIx)) {
+                continue;
+            }
 
             // 如果是不是合并的单元格的第一格, 则跳过 (后续会合并)
             CellRangeAddress range = ExcelToHtmlUtils.getMergedRange(mergedRanges, row.getRowNum(), colIx);
-            if (range != null && (range.getFirstColumn() != colIx || range.getFirstRow() != row.getRowNum())) continue;
+            if (range != null && (range.getFirstColumn() != colIx || range.getFirstRow() != row.getRowNum())) {
+                continue;
+            }
 
             Cell cell = row.getCell(colIx);
 
@@ -570,7 +606,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
 
                 boolean hasBreaks = false;
                 for (int nextColumnIndex = colIx + 1; nextColumnIndex < maxColIx; nextColumnIndex++) {
-                    if (!isOutputHiddenColumns() && sheet.isColumnHidden(nextColumnIndex)) continue;
+                    if (!isOutputHiddenColumns() && sheet.isColumnHidden(nextColumnIndex)) {
+                        continue;
+                    }
 
                     if (row.getCell(nextColumnIndex) != null
                             && !isTextEmpty(row.getCell(nextColumnIndex))) {
@@ -581,24 +619,27 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
                     divWidthPx += getColumnWidth(sheet, nextColumnIndex);
                 }
 
-                if (!hasBreaks)
+                if (!hasBreaks) {
                     divWidthPx = Integer.MAX_VALUE;
+                }
             }
 
             Element tableCellElement = htmlDocumentFacade.createTableCell();
 
             // 创建合并单元的单元格 (由于上面已经过滤掉了非第一列的单元格，因此这里应该都是第一列的单元格，可以直接创建)
             if (range != null) {
-                if (range.getFirstColumn() != range.getLastColumn())
+                if (range.getFirstColumn() != range.getLastColumn()) {
                     tableCellElement.setAttribute(
                             "colspan",
                             String.valueOf(range.getLastColumn()
                                     - range.getFirstColumn() + 1));
-                if (range.getFirstRow() != range.getLastRow())
+                }
+                if (range.getFirstRow() != range.getLastRow()) {
                     tableCellElement.setAttribute(
                             "rowspan",
                             String.valueOf(range.getLastRow()
                                     - range.getFirstRow() + 1));
+                }
             }
 
             boolean emptyCell;
@@ -616,7 +657,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
 //                                        varValue = "\""+ varValue + "\"";
 //                                    }
 //                                }
-                                tableRowElement.setAttribute(Thymeleaf_PREFIX + attributeVal[0], attributeVal[1]);
+                                tableRowElement.setAttribute(THYMELEAF_PREFIX + attributeVal[0], attributeVal[1]);
                             }
                         }
                     }
@@ -625,7 +666,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
                     if((attributeList = cellVarFuncInfoGroup.filterCellInfo(CellVarFuncInfo.VarFunctionType.CURRENT_ATTRIBUTE)) != null){
                         for(CellVarFuncInfo attribute : attributeList){
                             if((attributeVal = attribute.getAttribute()) != null){
-                                tableCellElement.setAttribute(Thymeleaf_PREFIX + attributeVal[0], attributeVal[1]);
+                                tableCellElement.setAttribute(THYMELEAF_PREFIX + attributeVal[0], attributeVal[1]);
                             }
                         }
                     }
@@ -705,7 +746,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
             value= getCellStringValue(cell);
         }
 
-        if(value == null) return true;
+        if(value == null) {
+            return true;
+        }
 
         final boolean noText = StringUtils.isBlank(value);
         final boolean wrapInDivs = !noText && isUseDivsToSpan() && !cellStyle.getWrapText();
@@ -734,13 +777,15 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         if (isOutputLeadingSpacesAsNonBreaking() && value.startsWith(" ")) {
             StringBuilder builder = new StringBuilder();
             for (int c = 0; c < value.length(); c++) {
-                if (value.charAt(c) != ' ')
+                if (value.charAt(c) != ' ') {
                     break;
+                }
                 builder.append('\u00a0');
             }
 
-            if (value.length() != builder.length())
+            if (value.length() != builder.length()) {
                 builder.append(value.substring(builder.length()));
+            }
 
             value = builder.toString();
         }
@@ -793,7 +838,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
      */
     protected void doFunctionAndVariableHandling(String value, Element tableCellElement){
         CellVarFuncInfoGroup group = new CellVarFuncInfoGroup();
-        group.parseVarFuncInfo(value);
+        CellVarFuncInfoGroup.parseVarFuncInfo(value);
 
 //        group.getInfoList()
     }
@@ -837,7 +882,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         final Short cellStyleKey = Short.valueOf(cellStyle.getIndex());
 
         String knownClass = excelStyleToClass.get(cellStyleKey);
-        if (knownClass != null) return knownClass;
+        if (knownClass != null) {
+            return knownClass;
+        }
 
         String cssStyle = buildStyle(workbook, cellStyle);
         String cssClass = htmlDocumentFacade.getOrCreateCssClass(cssClassPrefixCell, cssStyle);
@@ -875,7 +922,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
 
                         short df = cellStyle.getDataFormat();
                         String dfs = cellStyle.getDataFormatString();
-                        value = _formatter.formatRawCellContents(nValue, df, dfs);
+                        value = formatter.formatRawCellContents(nValue, df, dfs);
                         break;
                     case BOOLEAN:
                         value = String.valueOf(cell.getBooleanCellValue());
@@ -893,7 +940,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
                 value = EMPTY;
                 break;
             case NUMERIC:
-                value = _formatter.formatCellValue(cell);
+                value = formatter.formatCellValue(cell);
                 break;
             case BOOLEAN:
                 value = String.valueOf(cell.getBooleanCellValue());
@@ -1004,8 +1051,9 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
                 switch (cell.getCachedFormulaResultTypeEnum()) {
                     case STRING:
                         RichTextString str = cell.getRichStringCellValue();
-                        if (str == null || str.length() <= 0)
+                        if (str == null || str.length() <= 0) {
                             return false;
+                        }
 
                         value = str.toString();
                         break;
@@ -1014,7 +1062,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
                         double nval = cell.getNumericCellValue();
                         short df = style.getDataFormat();
                         String dfs = style.getDataFormatString();
-                        value = _formatter.formatRawCellContents(nval, df, dfs);
+                        value = formatter.formatRawCellContents(nval, df, dfs);
                         break;
                     case BOOLEAN:
                         value = String.valueOf(cell.getBooleanCellValue());
@@ -1031,7 +1079,7 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
                 value = EMPTY;
                 break;
             case NUMERIC:
-                value = _formatter.formatCellValue(cell);
+                value = formatter.formatCellValue(cell);
                 break;
             case BOOLEAN:
                 value = String.valueOf(cell.getBooleanCellValue());
@@ -1130,8 +1178,8 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
         this.outputRowNumbers = outputRowNumbers;
     }
 
-    public HSSFDataFormatter get_formatter() {
-        return _formatter;
+    public HSSFDataFormatter getFormatter() {
+        return formatter;
     }
 
     public String getCssClassContainerCell() {
@@ -1205,4 +1253,6 @@ public class ExcelToHtmlTemplateConvertor implements Serializable {
     public void setSheetPageHeader(String sheetPageHeader) {
         this.sheetPageHeader = sheetPageHeader;
     }
+
+
 }

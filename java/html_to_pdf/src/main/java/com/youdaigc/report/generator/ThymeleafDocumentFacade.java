@@ -20,11 +20,13 @@ public class ThymeleafDocumentFacade extends HtmlDocumentFacade{
         html.setAttribute("xmlns:th", "http://www.thymeleaf.org");
     }
 
+    @Override
     public Element createTableRow()
     {
         return document.createElement( "tr" );
     }
 
+    @Override
     public Element createTableCell()
     {
         return document.createElement( "td" );

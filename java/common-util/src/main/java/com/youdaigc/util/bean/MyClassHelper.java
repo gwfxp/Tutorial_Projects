@@ -44,7 +44,9 @@ public class MyClassHelper implements Serializable{
      * @return
      */
     static public String getAbsolutePath(String originalPath){
-        if(originalPath == null) return null;
+        if(originalPath == null) {
+            return null;
+        }
 
 
         StringBuilder fullPath = new StringBuilder();
@@ -113,7 +115,9 @@ public class MyClassHelper implements Serializable{
      * @return
      */
     static public List<Class> getClassAllInterfaces(Class<?> sourceClass){
-        if(sourceClass == null) return null;
+        if(sourceClass == null) {
+            return null;
+        }
 
         List<Class> resultList = new ArrayList<>();
         List<Class> bufList;
@@ -143,16 +147,22 @@ public class MyClassHelper implements Serializable{
      * @return
      */
     static public boolean isClassImplInterfaces(Class<?> sourceClass, Class<?> targetInterface){
-        if(sourceClass == null || targetInterface == null) return false;
+        if(sourceClass == null || targetInterface == null) {
+            return false;
+        }
 
         Class<?> parentClass = sourceClass.getSuperclass();
         if(targetInterface.isInterface()){
             // 检查当前Class的Interface实现
             for(Class inf : sourceClass.getInterfaces()){
-                if(inf.equals(targetInterface)) return true;
+                if(inf.equals(targetInterface)) {
+                    return true;
+                }
             }
         }else {
-            if(sourceClass.equals(targetInterface)) return true;
+            if(sourceClass.equals(targetInterface)) {
+                return true;
+            }
         }
 
         // 递归检查父类的实现
@@ -197,7 +207,9 @@ public class MyClassHelper implements Serializable{
      */
     static public <T> T getClassInstance(String classFullName, Object... constructorAgrs){
         Class targetClass = getClassFromName(classFullName);
-        if(targetClass == null) return null;
+        if(targetClass == null) {
+            return null;
+        }
 
         try {
             if(constructorAgrs != null && constructorAgrs.length>0 && constructorAgrs[0]!=null){
@@ -224,7 +236,9 @@ public class MyClassHelper implements Serializable{
      * @return
      */
     static public <T> T getClassInstanceWithClassNameArgs(String classFullName, String... constructorAgrs){
-        if(classFullName == null) return null;
+        if(classFullName == null) {
+            return null;
+        }
 
         Object[] param = null;
         if(constructorAgrs != null && constructorAgrs.length>0 && constructorAgrs[0]!=null) {
@@ -247,7 +261,9 @@ public class MyClassHelper implements Serializable{
      * @return
      */
     static public Method getClassMethod(final Class sourceClass, final String methodName, final boolean caseSenstive, final Class<?>... parameterTypes){
-        if(sourceClass == null || methodName == null) return null;
+        if(sourceClass == null || methodName == null) {
+            return null;
+        }
 
         boolean matchFound = false;
         for(Method method : sourceClass.getMethods()){

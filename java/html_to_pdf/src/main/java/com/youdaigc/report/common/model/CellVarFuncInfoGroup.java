@@ -38,14 +38,18 @@ public class CellVarFuncInfoGroup implements Serializable {
     private List<CellVarFuncInfo> infoList;
 
     static public CellVarFuncInfoGroup parseVarFuncInfo(String source) {
-        if(source == null) return null;
+        if(source == null) {
+            return null;
+        }
         CellVarFuncInfoGroup cellVarFuncInfoGroup = new CellVarFuncInfoGroup();
         cellVarFuncInfoGroup.parseString(source);
         return cellVarFuncInfoGroup;
     }
 
     public List<CellVarFuncInfo> filterCellInfo(CellVarFuncInfo.VarFunctionType... cellTypes){
-        if(infoList == null || infoList.isEmpty()) return null;
+        if(infoList == null || infoList.isEmpty()) {
+            return null;
+        }
 
         List<CellVarFuncInfo> resultList = new ArrayList<>();
         for(CellVarFuncInfo cellInfo : infoList){
@@ -67,7 +71,9 @@ public class CellVarFuncInfoGroup implements Serializable {
     public boolean isPlanTextCell(){
         if(infoList != null && !infoList.isEmpty()){
             for(CellVarFuncInfo cellInfo : infoList){
-                if(cellInfo.getCellType() != CellVarFuncInfo.VarFunctionType.PLAIN_TEXT) return false;
+                if(cellInfo.getCellType() != CellVarFuncInfo.VarFunctionType.PLAIN_TEXT) {
+                    return false;
+                }
             }
         }
 
@@ -89,7 +95,9 @@ public class CellVarFuncInfoGroup implements Serializable {
             currentChar = souceArray[i];    // 获取当前字符
 
             // 如果发现存在新的开始符号，则增加需要匹配的括号数量
-            if(currentChar == BRACKET_BGN.charValue) brackMatchCnt++;
+            if(currentChar == BRACKET_BGN.charValue) {
+                brackMatchCnt++;
+            }
 
             // 如果发现存在新的结束符号，则减少需要匹配的括号数量
             if(currentChar == endChar && preChar != skipChar) {
@@ -108,8 +116,12 @@ public class CellVarFuncInfoGroup implements Serializable {
     }
 
     public void addCellVarFuncInfo(CellVarFuncInfo... cellVarFuncInfo) {
-        if(cellVarFuncInfo == null || cellVarFuncInfo.length <1) return;
-        if(infoList == null) infoList = new ArrayList<>();
+        if(cellVarFuncInfo == null || cellVarFuncInfo.length <1) {
+            return;
+        }
+        if(infoList == null) {
+            infoList = new ArrayList<>();
+        }
         infoList.addAll(Arrays.asList(cellVarFuncInfo));
     }
 
@@ -119,7 +131,9 @@ public class CellVarFuncInfoGroup implements Serializable {
      * @param source
      */
     public void parseString(String source) {
-        if(source == null || "".equals(source.trim())) return;
+        if(source == null || "".equals(source.trim())) {
+            return;
+        }
 
         char[] souceArray = source.toCharArray();
         char preChar, currentChar = 0;

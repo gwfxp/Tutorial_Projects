@@ -24,11 +24,11 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	public static final String DEFAULT_VARIABLE_SUFFIX = "}";
 
 
-	//	/** The decimal format. */
+	/** The decimal format. */
 	transient static final public SimpleDateFormat defualtDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	transient static final public SimpleDateFormat dateFormatByDay = new SimpleDateFormat("yyyy-MM-dd");
 
-	//	/** The decimal format. */
+	/** The decimal format. */
 	transient static final public DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
 	/** The decimal rate format. */
@@ -49,7 +49,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 */
 	public static <T> List<String> getEnumNameList(Enum source){
 		List<String> nameList = new ArrayList<>();
-		if(source == null) return nameList;
+		if(source == null) {
+            return nameList;
+        }
 
 
 		for(Object e : source.getDeclaringClass().getEnumConstants()){
@@ -68,12 +70,17 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return
 	 */
 	public static <T> T nvl(T source, T defaultValue){
-		if(source != null) return source;
-		else return defaultValue;
+		if(source != null) {
+            return source;
+        } else {
+            return defaultValue;
+        }
 	}
 
 	public static <T> boolean isEqual(T source, T target){
-		if(source == null && target == null) return true;
+		if(source == null && target == null) {
+            return true;
+        }
 		if(source == null){
 			return target.equals(source);
 		}else{
@@ -82,7 +89,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	}
 
 	public static <T> boolean isStringEqual(T source, T target, boolean ignoreCase){
-		if(source == null && target == null) return true;
+		if(source == null && target == null) {
+            return true;
+        }
 		if(source == null){
 			if(ignoreCase){
 				return target.toString().equalsIgnoreCase((source==null)?null:source.toString());
@@ -102,7 +111,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 		Double result = 0D;
 		if(source != null && source.length > 0){
 			for(Double i : source){
-				if(i != null) result += i;
+				if(i != null) {
+                    result += i;
+                }
 			}
 		}
 
@@ -113,7 +124,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 		Integer result = 0;
 		if(source != null && source.length > 0){
 			for(Integer i : source){
-				if(i != null) result += i;
+				if(i != null) {
+                    result += i;
+                }
 			}
 		}
 
@@ -127,8 +140,11 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the string
 	 */
 	public static String formatRateDoubleValue(Double source){
-		if(source == null) return decimalRateFormat.format(0);
-		else return decimalRateFormat.format(source);
+		if(source == null) {
+            return decimalRateFormat.format(0);
+        } else {
+            return decimalRateFormat.format(source);
+        }
 	}
 
 	/**
@@ -138,17 +154,24 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the string
 	 */
 	public static String formatAmtDoubleValue(Double source){
-		if(source == null) return decimalFormat.format(0);
-		else return decimalFormat.format(source);
+		if(source == null) {
+            return decimalFormat.format(0);
+        } else {
+            return decimalFormat.format(source);
+        }
 	}
 
 	public static <T> T getTValue(T source, T defaultValue){
-		if(source == null) return defaultValue;
+		if(source == null) {
+            return defaultValue;
+        }
 		return source;
 	}
 
 	public static double getDoubleValue(Double source, Double defaultValue){
-		if(source == null) return defaultValue;
+		if(source == null) {
+            return defaultValue;
+        }
 		return source;
 	}
 	public static double getDoubleValue(Double source){
@@ -156,7 +179,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	}
 
 	public static int getIntValue(Integer source, Integer defaultValue){
-		if(source == null) return defaultValue;
+		if(source == null) {
+            return defaultValue;
+        }
 		return source;
 	}
 	public static int getIntValue(Integer source){
@@ -172,7 +197,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the string
 	 */
 	public static String toSBC(String input) {
-		if(isBlank(input)) return input;
+		if(isBlank(input)) {
+            return input;
+        }
 		// 半角转全角：
 		char[] c = input.toCharArray();
 		for (int i = 0; i < c.length; i++) {
@@ -180,8 +207,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 				c[i] = (char) 12288;
 				continue;
 			}
-			if (c[i] < 127)
-				c[i] = (char) (c[i] + 65248);
+			if (c[i] < 127) {
+                c[i] = (char) (c[i] + 65248);
+            }
 		}
 		return new String(c);
 	}
@@ -195,7 +223,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the string
 	 */
 	public static String toDBC(String input) {
-		if(isBlank(input)) return input;
+		if(isBlank(input)) {
+            return input;
+        }
 
 		char[] c = input.toCharArray();
 		for (int i = 0; i < c.length; i++) {
@@ -203,8 +233,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 				c[i] = (char) 32;
 				continue;
 			}
-			if (c[i] > 65280 && c[i] < 65375)
-				c[i] = (char) (c[i] - 65248);
+			if (c[i] > 65280 && c[i] < 65375) {
+                c[i] = (char) (c[i] - 65248);
+            }
 		}
 		return new String(c);
 	}
@@ -244,7 +275,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the string
 	 */
 	public static String lowcaseString(String source, int count){
-		if(source == null) return null;
+		if(source == null) {
+            return null;
+        }
 
 		if(source.length() <=3){
 			return source.toLowerCase();
@@ -261,38 +294,52 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the string for pojo class name
 	 */
 	public static String getStringForPojoClassName(Object source){
-		if(source == null) return null;
+		if(source == null) {
+            return null;
+        }
 		return StringUtils.capitalize(getStringVal(source));
 	}
 
 	public static String getStringVal(Object source){
-		if(source != null) return source.toString().trim().replace(" ", "")
-					.replace("_", "").replace("-", "").replace(".", "");
+		if(source != null) {
+            return source.toString().trim().replace(" ", "")
+                    .replace("_", "").replace("-", "").replace(".", "");
+        }
 		return null;
 	}
 
 	public static String getStrValue(Object val){
-		if(val == null) return null;
+		if(val == null) {
+            return null;
+        }
 		return val.toString().trim();
 	}
 
 	public static Double getDoubleValue(Object val){
-		if(val == null) return null;
+		if(val == null) {
+            return null;
+        }
 		return Double.valueOf(val.toString());
 	}
 
 	public static Integer getIntValue(Object val){
-		if(val == null) return null;
+		if(val == null) {
+            return null;
+        }
 		return Integer.valueOf(val.toString());
 	}
 
 	public static Long getLongValue(Object val){
-		if(val == null) return null;
+		if(val == null) {
+            return null;
+        }
 		return Long.valueOf(val.toString());
 	}
 
 	public static Boolean getBooleanValue(Object val){
-		if(val == null) return false;
+		if(val == null) {
+            return false;
+        }
 
 		String valStr = val.toString();
 		if("Y".equalsIgnoreCase(valStr) || "YES".equalsIgnoreCase(valStr) || "T".equalsIgnoreCase(valStr) || "TRUE".equalsIgnoreCase(valStr)){
@@ -310,7 +357,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return
 	 */
 	public static String parseVariable(String source, String prefix, String suffix){
-		if(isBlank(source)) return source;
+		if(isBlank(source)) {
+            return source;
+        }
 
 		if(source.indexOf(prefix)>=0){
 			return source.substring(source.indexOf(prefix) + prefix.length(), source.indexOf(suffix));
@@ -332,7 +381,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	}
 
 	public static String replaceVariableValue(String source, String variableName, String prefix, String suffix, String targetValue){
-		if(source == null || targetValue == null || variableName == null) return source;
+		if(source == null || targetValue == null || variableName == null) {
+            return source;
+        }
 
 		return source.replace(prefix + variableName + suffix, targetValue);
 	}
@@ -347,7 +398,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return
 	 */
 	public static String getAlphaNumericStringVal(Object source){
-		if(source != null) return source.toString().replaceAll("[^A-Za-z0-9]", "");
+		if(source != null) {
+            return source.toString().replaceAll("[^A-Za-z0-9]", "");
+        }
 		return null;
 	}
 
@@ -357,7 +410,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return
 	 */
 	public static String getCamelNamingString(Object source){
-		if(source == null) return null;
+		if(source == null) {
+            return null;
+        }
 
 		String[] buf = StringUtils.split(source.toString().toLowerCase(), "_");
 		StringBuilder result = new StringBuilder();
@@ -377,7 +432,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the list
 	 */
 	public static List<String> splitStringToList(String sourceString, boolean lowcase, String delimiter){
-		if(StringUtils.isEmpty(sourceString)) return null;
+		if(StringUtils.isEmpty(sourceString)) {
+            return null;
+        }
 
 		List<String> result = new ArrayList<String>();
 		for(String name: StringUtils.split(sourceString, delimiter)){
@@ -403,7 +460,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @param orgMsg the org msg
 	 */
 	public static String stripOffXMLCDataMark(String orgMsg){
-		if(orgMsg == null) return orgMsg;
+		if(orgMsg == null) {
+            return orgMsg;
+        }
 
 		if(orgMsg.contains("&lt;![CDATA[")){
 			return StringUtils.substringBetween(orgMsg, "&lt;![CDATA[", "]]&gt;");
@@ -426,9 +485,15 @@ public class MyStringUtils extends StringUtils implements Serializable {
 		// Loop using Entry Set in case is LinkedHashMap. KeySet<Set> is not sorted list
 		if(source!= null){
 			for(Object en : source){
-				if(en == null) continue;
-				if(buf.length() >0) buf.append(delimiter);
-				if(prefix!=null) buf.append(prefix);
+				if(en == null) {
+                    continue;
+                }
+				if(buf.length() >0) {
+                    buf.append(delimiter);
+                }
+				if(prefix!=null) {
+                    buf.append(prefix);
+                }
 				buf.append(en.toString());
 			}
 		}
@@ -491,11 +556,15 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return
 	 */
 	static public String dumpArrayValue(Object[] objects){
-		if(objects == null || objects.length <1) return null;
+		if(objects == null || objects.length <1) {
+            return null;
+        }
 
 		StringBuilder result = new StringBuilder("{");
 		for(Object o : objects){
-			if(result.length() > 2) result.append(", ");
+			if(result.length() > 2) {
+                result.append(", ");
+            }
 			result.append(String.format("%s", (o!=null)?o.toString():null));
 		}
 
@@ -519,9 +588,18 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//	Begin: Date 相关方法
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 *
+	 * @param source
+	 * @return
+	 */
 	public static java.sql.Date converToSqlDate(Date source){
-		if(source == null) return null;
-		else return new java.sql.Date(source.getTime());
+		if(source == null) {
+            return null;
+        } else {
+            return new java.sql.Date(source.getTime());
+        }
 	}
 
 	/**
@@ -564,7 +642,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	public static GregorianCalendar getCalender(Integer year, Integer month, Integer date){
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setLenient(false);
-		if(year != null) gc.set(GregorianCalendar.YEAR, year);
+		if(year != null) {
+            gc.set(GregorianCalendar.YEAR, year);
+        }
 		if(month != null){
 			gc.set(GregorianCalendar.MONTH, month-1);
 		}else{
@@ -607,7 +687,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the calender by integer value
 	 */
 	public static GregorianCalendar getCalenderByIntegerValue(Integer source){
-		if(source == null) return null;
+		if(source == null) {
+            return null;
+        }
 
 		String buf = source.toString();
 		switch(buf.length()){
@@ -627,7 +709,9 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return
 	 */
 	public static Date convertIntegerToDate(Integer source){
-		if(source == null) return null;
+		if(source == null) {
+            return null;
+        }
 		GregorianCalendar calendar = getCalenderByIntegerValue(source);
 		if(calendar != null){
 			return calendar.getTime();
@@ -645,9 +729,15 @@ public class MyStringUtils extends StringUtils implements Serializable {
 	 * @return the date
 	 */
 	public static Date getDate(int year, int month, int day){
-		if(month < 0 || month >12) return null;
-		if(day < 0 || day >31) return null;
-		if(month>1) month--;
+		if(month < 0 || month >12) {
+            return null;
+        }
+		if(day < 0 || day >31) {
+            return null;
+        }
+		if(month>1) {
+            month--;
+        }
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, year);

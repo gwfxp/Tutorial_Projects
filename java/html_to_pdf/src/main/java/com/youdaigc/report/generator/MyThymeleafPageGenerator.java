@@ -59,24 +59,38 @@ public class MyThymeleafPageGenerator implements Serializable {
     }
 
     public MyThymeleafPageGenerator(String thymeleafTemplatePath){
-        if(thymeleafTemplatePath!=null) this.thymeleafTemplatePath = thymeleafTemplatePath;
+        if(thymeleafTemplatePath!=null) {
+            this.thymeleafTemplatePath = thymeleafTemplatePath;
+        }
 //        getTemplateEngine();
     }
 
     public MyThymeleafPageGenerator(String thymeleafTemplatePath, String thymeleafTemplateSuffix){
-        if(thymeleafTemplatePath!=null) this.thymeleafTemplatePath = thymeleafTemplatePath;
-        if(thymeleafTemplateSuffix!=null) this.thymeleafTemplateSuffix = thymeleafTemplateSuffix;
+        if(thymeleafTemplatePath!=null) {
+            this.thymeleafTemplatePath = thymeleafTemplatePath;
+        }
+        if(thymeleafTemplateSuffix!=null) {
+            this.thymeleafTemplateSuffix = thymeleafTemplateSuffix;
+        }
     }
 
     public MyThymeleafPageGenerator(String thymeleafTemplatePath, String thymeleafTemplateSuffix, AbstractConfigurableTemplateResolver resolver){
-        if(thymeleafTemplatePath!=null) this.thymeleafTemplatePath = thymeleafTemplatePath;
-        if(thymeleafTemplateSuffix!=null) this.thymeleafTemplateSuffix = thymeleafTemplateSuffix;
+        if(thymeleafTemplatePath!=null) {
+            this.thymeleafTemplatePath = thymeleafTemplatePath;
+        }
+        if(thymeleafTemplateSuffix!=null) {
+            this.thymeleafTemplateSuffix = thymeleafTemplateSuffix;
+        }
         this.resolver = resolver;
     }
 
     public MyThymeleafPageGenerator(String thymeleafTemplatePath, String thymeleafTemplateSuffix, TemplateResolverType resolverType){
-        if(thymeleafTemplatePath!=null) this.thymeleafTemplatePath = thymeleafTemplatePath;
-        if(thymeleafTemplateSuffix!=null) this.thymeleafTemplateSuffix = thymeleafTemplateSuffix;
+        if(thymeleafTemplatePath!=null) {
+            this.thymeleafTemplatePath = thymeleafTemplatePath;
+        }
+        if(thymeleafTemplateSuffix!=null) {
+            this.thymeleafTemplateSuffix = thymeleafTemplateSuffix;
+        }
         initTemplateResolverByType(resolverType);
     }
 
@@ -97,6 +111,7 @@ public class MyThymeleafPageGenerator implements Serializable {
 //            case SpringResourceTemplateResolver:
 //                this.resolver = new SpringResourceTemplateResolver();
 //                break;
+            default:
         }
     }
 

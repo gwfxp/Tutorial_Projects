@@ -9,10 +9,25 @@ public class CellVarFuncInfo implements Serializable {
     private static final long serialVersionUID = 3084704257462020310L;
 
     public enum VarFunctionType {
+        /**
+         * Function标签
+         */
         FUNCTION("%{", "}"),
+        /**
+         * 父节点的属性
+         */
         PARENT_ATTRIBUTE("&&{", "}"),
+        /**
+         * 当前节点属性
+         */
         CURRENT_ATTRIBUTE("&{", "}"),
+        /**
+         * 注释
+         */
         COMMENT("#{", "}"),
+        /**
+         * 纯文本
+         */
         PLAIN_TEXT("", "");
 
         private String prefix;
@@ -40,11 +55,17 @@ public class CellVarFuncInfo implements Serializable {
         }
 
         static public boolean hasVarFunction(String source) {
-            if (source == null) return false;
+            if (source == null) {
+                return false;
+            }
 
             for (VarFunctionType type : VarFunctionType.values()) {
-                if (PLAIN_TEXT.equals(type)) continue;
-                if (source.contains(type.getPrefix())) return true;
+                if (PLAIN_TEXT.equals(type)) {
+                    continue;
+                }
+                if (source.contains(type.getPrefix())) {
+                    return true;
+                }
             }
 
             return false;
@@ -70,8 +91,11 @@ public class CellVarFuncInfo implements Serializable {
     }
 
     public void addCharValue(char value){
-        if(values == null) values = String.valueOf(value);
-        else values += String.valueOf(value);
+        if(values == null) {
+            values = String.valueOf(value);
+        } else {
+            values += String.valueOf(value);
+        }
     }
 
     public String[] getAttribute(){

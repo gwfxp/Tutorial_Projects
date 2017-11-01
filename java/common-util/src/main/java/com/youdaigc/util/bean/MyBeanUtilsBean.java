@@ -19,8 +19,8 @@ import java.util.*;
  * Common Bean Operation methods
  */
 public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
-	transient static protected final String MapSuffix = "Map";
-	transient static protected final String RemovedPojoCalssSuffix[] = {
+	transient static protected final String MAP_SUFFIX = "Map";
+	transient static protected final String[] RemovedPojoCalssSuffix = {
 			null, // Note: null is required for no replacement condition
 			"Model", "model", "Bean", "bean"
 	};
@@ -67,7 +67,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	 * @throws InvocationTargetException
 	 */
 	public String replaceTemplateStringHolder(String sourceTemplateString, String replaceHolderTemplate, Object dataBean){
-		if(dataBean == null) return sourceTemplateString;
+		if(dataBean == null) {
+			return sourceTemplateString;
+		}
 
 		String replace_name;
 		Object replace_value;
@@ -85,7 +87,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 
 				// Note: Better to Check the Template String contains target Replace Name before retrieve the actual value from Data Source Bean
 				// 			which can avoid overhead the use of "getSimpleProperty" method
-				if(!sourceTemplateString.contains(String.format(replaceHolderTemplate, replace_name))) continue;
+				if(!sourceTemplateString.contains(String.format(replaceHolderTemplate, replace_name))) {
+					continue;
+				}
 
 				try {
 					replace_value = getSimpleProperty(dataBean, replace_name);
@@ -104,6 +108,7 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 		return sourceTemplateString;
 	}
 
+	@Override
 	public void copyProperties(Object destinationObject, Object originalObject)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		copyProperties(destinationObject, originalObject, null);
@@ -185,17 +190,23 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 
 				if(excludedPropertyList.contains(name.toLowerCase())){
 					// Exclude Mode
-					if(exlcudeMode) continue;
+					if(exlcudeMode) {
+						continue;
+					}
 				}else {
 					// Include Mode
-					if(!exlcudeMode) continue;
+					if(!exlcudeMode) {
+						continue;
+					}
 				}
 
 				if (isReadable(originalObject, name) && isWriteable(destinationObject, name)) {
 					try {
 						Object value = ((DynaBean) originalObject).get(name);
 						// 2016.12.05 zhoush:判断值是否为空
-						if(filterNull && value == null) continue;
+						if(filterNull && value == null) {
+							continue;
+						}
 						if (destinationObject instanceof DynaBean) {
 							((DynaBean) destinationObject).set(name, value);
 						} else {
@@ -215,16 +226,22 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 				String name = (String) entry.getKey();
 				if(excludedPropertyList.contains(name.toLowerCase())){
 					// Exclude Mode
-					if(exlcudeMode) continue;
+					if(exlcudeMode) {
+						continue;
+					}
 				}else {
 					// Include Mode
-					if(!exlcudeMode) continue;
+					if(!exlcudeMode) {
+						continue;
+					}
 				}
 
 				if (isWriteable(destinationObject, name)) {
 					try {
 						// 2016.12.05 zhoush:判断值是否为空
-						if(filterNull && entry.getValue() == null) continue;
+						if(filterNull && entry.getValue() == null) {
+							continue;
+						}
 						if (destinationObject instanceof DynaBean) {
 							((DynaBean) destinationObject).set(name, entry.getValue());
 						} else {
@@ -244,10 +261,14 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 
 				if(excludedPropertyList.contains(name.toLowerCase())){
 					// Exclude Mode
-					if(exlcudeMode) continue;
+					if(exlcudeMode) {
+						continue;
+					}
 				}else {
 					// Include Mode
-					if(!exlcudeMode) continue;
+					if(!exlcudeMode) {
+						continue;
+					}
 				}
 
 				if (isReadable(originalObject, name) && isWriteable(destinationObject, name)) {
@@ -366,9 +387,15 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	 */
 	@SuppressWarnings("rawtypes")
 	public Object getNestPropertyIgnoreCase(Object bean, List<String> propertyNameList, Object... params) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		if(bean == null) throw new NoSuchMethodException("Lookup Bean is null");
-		if(propertyNameList == null) throw new NoSuchMethodException("Lookup Property Name List is null");
-		if(propertyNameList.size() < 1) throw new NoSuchMethodException("Lookup Property Name List is Empty");
+		if(bean == null) {
+			throw new NoSuchMethodException("Lookup Bean is null");
+		}
+		if(propertyNameList == null) {
+			throw new NoSuchMethodException("Lookup Property Name List is null");
+		}
+		if(propertyNameList.size() < 1) {
+			throw new NoSuchMethodException("Lookup Property Name List is Empty");
+		}
 
 		if(logger.isDebugEnabled()){
 			logger.debug("Lookup Property " + propertyNameList);
@@ -419,7 +446,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	 */
 	@SuppressWarnings("rawtypes")
 	protected Object getNestObjectValue(Object bean, Object... params){
-		if(bean == null || params == null || params.length < 1) return bean;
+		if(bean == null || params == null || params.length < 1) {
+			return bean;
+		}
 
 		if(bean instanceof List){
 			return ((List)bean).get((Integer)params[0]);
@@ -465,7 +494,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	 * @return
 	 */
 	public <T> T convertObjectValue(Object sourceVal, Class<T> targetClass){
-		if(sourceVal == null) return null;
+		if(sourceVal == null) {
+			return null;
+		}
 
 		String targetClassName = targetClass.getSimpleName().toLowerCase();
 
@@ -477,13 +508,13 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 		try {
 			switch (targetClassName) {
 				case "int":
-					return (T) new Integer(Double.valueOf(valStr).intValue());
+					return (T) Integer.valueOf(Double.valueOf(valStr).intValue());
 				case "long":
-					return (T) new Long(Double.valueOf(valStr).longValue());
+					return (T) Long.valueOf(Double.valueOf(valStr).longValue());
 				case "double":
 					return (T) Double.valueOf(valStr);
 				case "float":
-					return (T) new Float(Double.valueOf(valStr).floatValue());
+					return (T) Float.valueOf(Double.valueOf(valStr).floatValue());
 				case "date":
 					if (sourceVal instanceof Date) {
 						return (T) sourceVal;
@@ -523,7 +554,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	 * @param injectValue
 	 */
 	public boolean injectValue(Object targetBean, Object injectValue) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		if(targetBean == null || injectValue == null) return false;
+		if(targetBean == null || injectValue == null) {
+			return false;
+		}
 
 		String className = injectValue.getClass().getSimpleName();
 
@@ -572,7 +605,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 						result = propertyDescriptor.getName().equalsIgnoreCase(fieldName);
 					}
 
-					if(result) return propertyDescriptor;
+					if(result) {
+						return propertyDescriptor;
+					}
 				}
 			} catch (Exception e) {}
 		}
@@ -628,7 +663,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	 * @return
 	 */
 	public String getPropertyStringValue(Object sourceBean, String fieldName, String defaultValue){
-		if(sourceBean == null || fieldName == null) return defaultValue;
+		if(sourceBean == null || fieldName == null) {
+			return defaultValue;
+		}
 
 		try {
 			Object result = getProperty(sourceBean, fieldName);
@@ -642,7 +679,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	}
 
 	public <T> T getPropertyValueEx(Object sourceBean, String fieldName, Class<T> targetType, T defaultValue){
-		if(sourceBean == null || fieldName == null) return defaultValue;
+		if(sourceBean == null || fieldName == null) {
+			return defaultValue;
+		}
 
 		try {
 			Object result = getProperty(sourceBean, fieldName);
@@ -699,7 +738,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	 * @return
 	 */
 	public <T> PropertyDescriptor getClassPropertyDescriptor(Object sourceDataBean, Class<T> targetClassType, String suffix) {
-		if (targetClassType == null || sourceDataBean == null) return null;
+		if (targetClassType == null || sourceDataBean == null) {
+			return null;
+		}
 
 		PropertyDescriptor propertyDescriptor;
 		String mapName = null;
@@ -744,7 +785,9 @@ public class MyBeanUtilsBean extends PropertyUtilsBean implements Serializable{
 	 */
 	public <T, E> E getChildCollection(Object dataBean, Class<T> classType, Class<E> collectionType, String suffix, boolean autoCrete){
 		PropertyDescriptor propertyDescriptor = getClassPropertyDescriptor(dataBean, classType, suffix);
-		if(propertyDescriptor == null) return null;
+		if(propertyDescriptor == null) {
+			return null;
+		}
 
 		Object propertyVal;
 		E targetCollection = null;

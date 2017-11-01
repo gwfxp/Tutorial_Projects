@@ -33,7 +33,9 @@ public class AESHelper implements Serializable {
      * @return
      */
     public static String AESEncode(String encodeRules, String content){
-        if(encodeRules == null || content==null) return null;
+        if(encodeRules == null || content==null) {
+            return null;
+        }
 
         try {
             //1.构造密钥生成器，指定为AES算法,不区分大小写
@@ -57,7 +59,7 @@ public class AESHelper implements Serializable {
             byte [] byte_AES=cipher.doFinal(byte_encode);
             //10.将加密后的数据转换为字符串
 //            return Hex.encodeHexString(byte_encode);
-            return new String(new BASE64Encoder().encode(byte_AES)).replaceAll("\r", "").replaceAll("\n", "");
+            return new BASE64Encoder().encode(byte_AES).replaceAll("\r", "").replaceAll("\n", "");
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -65,7 +67,8 @@ public class AESHelper implements Serializable {
         //如果有错就返加nulll
         return null;
     }
-    /*
+
+    /**
      * 解密
      * 解密过程：
      * 1.同加密1-4步
@@ -73,7 +76,9 @@ public class AESHelper implements Serializable {
      * 3.将加密内容解密
      */
     public static String AESDecode(String encodeRules, String content){
-        if(encodeRules == null || content==null) return null;
+        if(encodeRules == null || content==null) {
+            return null;
+        }
 
         try {
             //1.构造密钥生成器，指定为AES算法,不区分大小写

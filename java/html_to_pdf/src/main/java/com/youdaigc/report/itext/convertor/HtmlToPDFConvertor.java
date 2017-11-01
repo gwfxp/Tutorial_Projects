@@ -44,7 +44,9 @@ public class HtmlToPDFConvertor implements Serializable {
      * @throws DocumentException
      */
     public void generateReportDocument(ReportDocumentInfo reportDocumentInfo) throws IOException, DocumentException {
-        if(!ReportDocFileType.PDF.equals(reportDocumentInfo.getReportDocFileType())) return;
+        if(!ReportDocFileType.PDF.equals(reportDocumentInfo.getReportDocFileType())) {
+            return;
+        }
 
         // step 1
         Document document = new Document(reportDocumentInfo.getPageSize(),
@@ -76,10 +78,11 @@ public class HtmlToPDFConvertor implements Serializable {
 
             CssFilesImpl cssFiles = new CssFilesImpl();
             InputStream inCssFile = XMLWorkerHelper.class.getResourceAsStream("/default.css");
-            if (inCssFile != null)
-                cssFiles.add(helper.getCSS(inCssFile));
-            else
+            if (inCssFile != null) {
+                cssFiles.add(XMLWorkerHelper.getCSS(inCssFile));
+            } else {
                 cssFiles.add(helper.getDefaultCSS());
+            }
             StyleAttrCSSResolver cssResolver = new StyleAttrCSSResolver(cssFiles);
             HtmlPipelineContext hpc = new HtmlPipelineContext(new CssAppliersImpl(fontImp));
             hpc.setAcceptUnknown(true).autoBookmark(true).setTagFactory(tagProcessorFactory).setResourcesRootPath(null);
@@ -87,10 +90,11 @@ public class HtmlToPDFConvertor implements Serializable {
             Pipeline<?> pipeline = new CssResolverPipeline(cssResolver, htmlPipeline);
             XMLWorker worker = new XMLWorker(pipeline, true);
             XMLParser p = new XMLParser(true, worker, reportDocumentInfo.getCharset());
-            if (reportDocumentInfo.getCharset() != null)
+            if (reportDocumentInfo.getCharset() != null) {
                 p.parse(new ByteArrayInputStream(reportDocumentInfo.getSource()), reportDocumentInfo.getCharset());
-            else
+            } else {
                 p.parse(new ByteArrayInputStream(reportDocumentInfo.getSource()));
+            }
 
         }finally {
             document.close();

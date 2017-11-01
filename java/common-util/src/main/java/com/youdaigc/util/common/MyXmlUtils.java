@@ -28,7 +28,9 @@ public class MyXmlUtils implements Serializable{
      * @return
      */
     public static String formatXML(String xml) {
-        if(xml == null) return null;
+        if(xml == null) {
+            return null;
+        }
 
         try {
             final InputSource src = new InputSource(new StringReader(xml));

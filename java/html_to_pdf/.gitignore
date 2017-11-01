@@ -3,7 +3,6 @@
 classes/*
 target/*
 out/*
-Test_Output/*
 !.mvn/wrapper/maven-wrapper.jar
 reference/*
 history/*
